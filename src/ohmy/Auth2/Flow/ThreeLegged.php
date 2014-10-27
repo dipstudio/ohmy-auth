@@ -36,6 +36,10 @@ class ThreeLegged extends Auth2Flow {
                 'state'         => $self->value['state']
 
             ));
+            
+            if(!empty($options)) {
+                $location .= '&'.http_build_query($options);
+            }
 
             header("Location: $location");
             exit();
