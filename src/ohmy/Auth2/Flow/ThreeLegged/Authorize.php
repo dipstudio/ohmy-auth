@@ -20,14 +20,15 @@ class Authorize extends Promise {
 
     public function access($url, Array $options=array()) {
         $self = $this;
-        $access = new Access(function($resolve, $reject) use($self, $url, $options) {
-            $self->client->POST($url, array(
+        $access = new Access(function($resolve, $reject) use($self, $url, $options = array()) {
+            $options += array(
                 'grant_type'    => 'authorization_code',
                 'client_id'     => $self->value['client_id'],
                 'client_secret' => $self->value['client_secret'],
                 'code'          => $self->value['code'],
                 'redirect_uri'  => $self->value['redirect_uri']
-            ))
+            );
+            $self->client->POST($url, $options, array())
             ->then(function($response) use($resolve) {
                 $resolve($response->text());
             });
