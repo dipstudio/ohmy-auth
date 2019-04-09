@@ -36,14 +36,17 @@ class Authorize extends Promise {
         }, $this->client);
 
         return $access->then(function($data) use($self) {
+
             $value = null;
-            parse_str($data, $array);
-            if (count($array) === 1) {
-                $json = json_decode($data, true);
-                if ($json) $value = array_merge($self->value, $json);
-                else $value['response'] = $data;
+
+            $json = json_decode($data, true);
+
+            if ($json) {
+                $value = array_merge($self->value, $json);
+            } else {
+                parse_str($data, $array);
+                $value =  array_merge($self->value, $array);
             }
-            else $value =  array_merge($self->value, $array);
             return $value;
         });
     }
